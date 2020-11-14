@@ -4,7 +4,6 @@ import csv
 import logging
 import concurrent.futures
 import pytube as yt
-import logging
 from datetime import datetime
 log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 today = datetime.now().strftime("%Y_%m_%d_%H_%M")
@@ -83,6 +82,10 @@ def download_video(video_url: str, out_path: str, prefix: str = None):
     logging.info("Merging start of \"{}\" and \"{}\"".format(video_path, audio_path))
 
     try:
+        """
+        Might need to make a subprocess call to make execution faster
+        ffmpeg -i "Python Multiprocessing Tutorial Run Code in Parallel Using the Multiprocessing Module_audio.mp4" -i "Python Multiprocessing Tutorial Run Code in Parallel Using the Multiprocessing Module_video.mp4" -ar 4100 -y -vcodec copy test.mp4
+        """
         ffmpeg.output(
                 ffmpeg.input(os.path.abspath(video_path)),
                 ffmpeg.input(os.path.abspath(audio_path)),
