@@ -80,15 +80,6 @@ def download_video(video_url: str, out_path: str, prefix: str = None):
     video_path = os.path.join(out_path, video_filename + FILENAME_EXT)
     audio_path = os.path.join(out_path, audio_filename + FILENAME_EXT)
 
-    if os.path.exists(video_path):
-        logging.info("Video Path exists")
-    else:
-        logging.info("Video Path does not exist")
-    if os.path.exists(audio_path):
-        logging.info("Audio Path exists")
-    else:
-        logging.info("Audio Path does not exist")
-
     logging.info("Merging start of \"{}\" and \"{}\"".format(video_path, audio_path))
 
     try:
@@ -126,21 +117,21 @@ def main():
         dwnld_list += [[row[0], row[1], None] for row in csv.reader(f, delimiter=",")]
     logging.info("Successfully read single videos to download.")
 
-    #Read videos in playlists to download
-    logging.info("Read Playlist File")
-    with open("playlists.csv", "rt", newline="") as f:
-        for pl_url, out_path in csv.reader(f, delimiter=","):
-            logging.info(f"{pl_url}::{out_path}")
-            try:
-                list_urls = yt.Playlist(pl_url).video_urls
-                logging.info(f"Playlist Urls: {list_urls}")
-                dwnld_list += [[video_url, out_path, "{:02d} - ".format(i)]
-                                  for video_url, i in zip(list_urls, range(1,len(list_urls) + 1))]
-            except Exception as e:
-                logging.error("Something when wrong when tryting to retireve a playlist: {}\n{}".format(pl_url, e))
-            else:
-                logging.info("Successfully retrieved video list from {}".format(pl_url))
-                logging.info(f"\n\n***Download List***\n{dwnld_list}")
+    ##Read videos in playlists to download
+    #logging.info("Read Playlist File")
+    #with open("playlists.csv", "rt", newline="") as f:
+    #    for pl_url, out_path in csv.reader(f, delimiter=","):
+    #        logging.info(f"{pl_url}::{out_path}")
+    #        try:
+    #            list_urls = yt.Playlist(pl_url).video_urls
+    #            logging.info(f"Playlist Urls: {list_urls}")
+    #            dwnld_list += [[video_url, out_path, "{:02d} - ".format(i)]
+    #                              for video_url, i in zip(list_urls, range(1,len(list_urls) + 1))]
+    #        except Exception as e:
+    #            logging.error("Something when wrong when tryting to retireve a playlist: {}\n{}".format(pl_url, e))
+    #        else:
+    #            logging.info("Successfully retrieved video list from {}".format(pl_url))
+    #            logging.info(f"\n\n***Download List***\n{dwnld_list}")
 
     # Queue and run a process for each video to download
     with concurrent.futures.ProcessPoolExecutor() as executor:
